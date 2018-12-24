@@ -1,0 +1,67 @@
+<%- include("./partials/header") %>
+
+<div class="container">
+  <h1><%= contact.firstName + " " + contact.lastName %></h1>
+  <h5>Address:</h5>
+  <div class="card">
+    <div class="card-content">
+      <table>
+        <tr>
+          <th>Street:</th>
+          <td><%= contact.address.street %></td>
+        </tr>
+        <tr>
+          <th>City:</th>
+          <td><%= contact.address.city %></td>
+          <th>State:</th>
+          <td><%= contact.address.state %></td>
+        </tr>
+        <tr>
+          <th>Country:</th>
+          <td><%= contact.address.country %></td>
+          <th>ZIP:</th>
+          <td><%= contact.address.zip %></td>
+        </tr>
+        <tr>
+          <th>Email:</th>
+          <td><%= contact.email %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br />
+  <h5>Phone Number:</h5>
+  <div class="card">
+    <div class="card-content">
+      <table>
+        <tr>
+          <th>Mobile:</th>
+          <td>
+            <%= contact.phoneNumber.mobile ? contact.phoneNumber.mobile : "none"
+            %>
+          </td>
+        </tr>
+        <tr>
+          <th>Home:</th>
+          <td>
+            <%= contact.phoneNumber.home ? contact.phoneNumber.home : "none" %>
+          </td>
+        </tr>
+        <tr>
+          <th>Work:</th>
+          <td>
+            <%= contact.phoneNumber.work ? contact.phoneNumber.work : "none" %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br />
+  <a
+    class="waves-effect waves-light btn"
+    href="/contacts/<%= contact._id %>/update"
+    >Update Contact</a
+  >
+</div>
+
+<%-include("./partials/footer")%>

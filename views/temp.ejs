@@ -1,0 +1,159 @@
+<div class="container">
+  <h3 style="margin-bottom: 30px;">Update form</h3>
+  <form
+    method="POST"
+    action="/contacts/<%= contact._id %>/update?_method=PATCH"
+  >
+    <div class="card">
+      <div class="card-content">
+        <table>
+          <tr>
+            <th>First Name:</th>
+            <td>
+              <input type="text" name="firstName" value=<%= contact.firstName
+              %>>
+            </td>
+            <td></td>
+            <th>Last Name:</th>
+            <td>
+              <input type="text" name="lastName" value=<%= contact.lastName %>>
+            </td>
+          </tr>
+          <tr>
+            <th>Email:</th>
+            <td>
+              <input type="email" name="email" value=<%= contact.email %>>
+            </td>
+          </tr>
+          <tr>
+            <th>Mobile Number:</th>
+            <td>
+              <input type="text" name="mobile" value=<%=
+              contact.phoneNumber.mobile %>>
+            </td>
+          </tr>
+          <tr>
+            <th>Home Number:</th>
+            <td>
+              <input type="text" name="home" value=<%= contact.phoneNumber.home
+              %>>
+            </td>
+          </tr>
+          <tr>
+            <th>Work Number:</th>
+            <td>
+              <input type="tel" name="work" value=<%=contact.phoneNumber.work
+              %>>
+            </td>
+          </tr>
+          <tr>
+            <th>Street:</th>
+            <td>
+              <input type="text" name="street" value=<%= contact.address.street
+              %>>
+            </td>
+          </tr>
+          <tr>
+            <th>City:</th>
+            <td>
+              <input type="text" name="city" value=<%= contact.address.city %>>
+            </td>
+            <td></td>
+            <th>State:</th>
+            <td>
+              <input type="text" name="state" value=<%= contact.address.state
+              %>>
+            </td>
+          </tr>
+          <tr>
+            <th>Country:</th>
+            <td>
+              <input type="text" name="country" value=<%=
+              contact.address.country %>>
+            </td>
+            <td></td>
+            <th>ZIP:</th>
+            <td>
+              <input type="text" name="zip" value=<%= contact.address.zip %>>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="card-action">
+      <button
+        class="btn waves-effect waves-light right"
+        type="submit"
+        style="margin-bottom: 50px; margin-top: 10px;"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+  <br />
+</div>
+
+<div class="container">
+  <h4>Update Form</h4>
+  <div class="row">
+    <form class="col m12" action="" method="post">
+      <!-- <div class="row"><label style="font-size: 14pt;">Name:</label></div>
+            <div class="row">
+              <div class="input-field col m6">
+                <input type="text" name="firstName" value=<%=contact.firstName%>>
+                <label for="firstName">First Name</label>
+              </div>
+              <div class="input-field col m6">
+                <input name="lastName" type="text" value=<%=contact.lastName%>>
+                <label for="lastName">Last Name</label>
+              </div>
+            </div>
+            <div class="row">
+              <label style="font-size: 14pt;">Email Address:</label>
+            </div>
+            <div class="row">
+              <div class="input-field col m6">
+                <input name="email" type="email" value=<%=contact.email%>>
+                <label for="email">Email</label>
+              </div>
+            </div>
+            <div class="row">
+              <label style="font-size: 14pt;">Phone Number:</label>
+            </div>
+            <div class="row">
+              <div class="input-field col m6">
+                <input name="mobile" type="text"
+                value=<%=contact.phoneNumber.mobile%>>
+                <label for="mobile">Mobile</label>
+              </div>
+              <div class="input-field col m6">
+                <input name="home" type="text" value=<%=contact.phoneNumber.home%>>
+                <label for="home">Home</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col m6">
+                <input name="work" type="text" value=<%=contact.phoneNumber.work%>>
+                <label for="work">Work</label>
+              </div>
+            </div>
+            <div class="row"><label style="font-size: 14pt;">Address:</label></div>
+            <div class="row">
+              <div class="input-field col m6">
+                <input name="city" type="text" value=<%=contact.address.city%>>
+                <label for="city">City</label>
+              </div>
+            </div> -->
+      <input
+        name="street"
+        type="text"
+        value="<%"
+        function()
+        {return
+        contact.address.street}
+        %
+      />
+      >
+    </form>
+  </div>
+</div>

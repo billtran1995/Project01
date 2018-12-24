@@ -1,11 +1,19 @@
 // Require package
-var express = require("express");
-var mongoose = require("mongoose");
-var bodyParser = require("body-parser");
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
+
+// Require routes
+const contactsRoutes = require("./routes/contacts");
 
 // Initialize app
 var app = express();
+app.set("view engine", "ejs");
+app.set("views", "views");
+app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
 //DB setup
@@ -29,6 +37,12 @@ mongoose.connection
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
+
+app.use("/contacts", contactsRoutes);
+
+app.use((req, res) =>
+  res.status(404).render("404", { pageTitle: "404 Page Not Found" })
+);
 
 app.listen(8080, () => {
   console.log("Server started");
