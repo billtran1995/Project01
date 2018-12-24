@@ -1,2 +1,15 @@
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.js"></script>
+    <script>
+       $(document).ready(function(){
+          $('.sidenav').sidenav();
+       });
+
+       if(window.location.pathname === "/contacts") {
+          $('a[href="/contacts"]').parent().addClass("active");
+       } else if (window.location.pathname === "/contacts/create") {
+	  $('a[href="/contacts/create"]').parent().addClass("active");
+       }
+    </script>   
    </body>
 </html>

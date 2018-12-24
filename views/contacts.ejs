@@ -1,16 +1,29 @@
 <%- include('partials/header') %>
 
 <div class="container">
-  <h1>Contacts</h1>
+  <h1 style="text-align: center;">Contacts</h1>
   <% if(contacts) { %>
-  <div class="collection">
+  <div class="collection container">
     <% contacts.forEach( contact => {%>
     <div class="collection-item">
-      <h5><%= contact.firstName + " " + contact.lastName %></h5>
-      <form action="/contacts/<%= contact._id %>?_method=DELETE" method="post">
-        <a class="btn" href="/contacts/<%= contact._id %>">View Contact</a>
-        <button class="btn red">Delete</button>
-      </form>
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="col m2 s12" style="padding-right:0;">
+          <i
+            class="fas fa-user-circle"
+            style="font-size: 600%; padding-top:5px;"
+          ></i>
+        </div>
+        <div class="col m10 s12" style="margin-bottom: 5px; padding-left: 0;">
+          <h5><%= contact.firstName + " " + contact.lastName %></h5>
+          <form
+            action="/contacts/<%= contact._id %>?_method=DELETE"
+            method="post"
+          >
+            <a class="btn" href="/contacts/<%= contact._id %>">View Contact</a>
+            <button class="btn red">Delete</button>
+          </form>
+        </div>
+      </div>
     </div>
     <% }) %>
   </div>
