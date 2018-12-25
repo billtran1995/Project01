@@ -5,3 +5,14 @@ th {
 .pagination {
   text-align: center;
 }
+
+.message {
+  text-align: center;
+  margin: 0;
+  background-color: rgba(229, 145, 145, 0.548);
+  border-radius: 20px;
+  font-size: 20pt;
+  margin-top: 20vh;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}

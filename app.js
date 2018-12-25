@@ -44,8 +44,8 @@ app.get("/", (req, res) => {
 
 app.use("/contacts", contactsRoutes);
 
-app.get("/generate-fake-data", (req, res) => {
-  for (let i = 0; i < 20; i++) {
+app.get("/generate-fake-data/:number", (req, res) => {
+  for (let i = 0; i < req.params.number; i++) {
     var contact = new Contacts();
 
     contact.firstName = faker.name.firstName();
