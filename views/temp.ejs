@@ -157,3 +157,39 @@
     </form>
   </div>
 </div>
+
+<!-- Pagination starts here -->
+<!-- Data: {contacts, currentPage, pages} -->
+<% if (pages > 0) { %>
+<ul class="pagination">
+  <% if(currentPage === 1) { %>
+  <li class="disabled">
+    <a><i class="material-icons">chevron_left</i></a>
+  </li>
+  <% } else { %>
+  <li>
+    <a><i class="material-icons">chevron_left</i></a>
+  </li>
+  <% } %> <% var pageCheckpoint = (currentPage > 5 ? currentPage - 4 : 1) %> <%
+  if (pageCheckpoint !== 1) { %>
+  <li class="disabled"><a>...</a></li>
+  <% } %> <% for (i = pageCheckpoint; i <= currentPage + 4 && i <= pages; i++) {
+  %> <% if (i === currentPage) { %>
+  <li class="active"><a><%= i %></a></li>
+  <% } else { %>
+  <li><a href="/contacts/<%= i %>"><%= i %></a></li>
+  <% } %> <% if (i == currentPage + 4 && i < pages) { %>
+  <li class="disabled"><a>...</a></li>
+  <% } %> <% } %> <% if (currentPage === pages) { %>
+  <li class="disabled">
+    <a><i class="material-icons">chevron_right</i></a>
+  </li>
+  <% } else { %>
+  <li>
+    <a href="/contacts/<%= pages %>"
+      ><i class="material-icons">chevron_right</i></a
+    >
+  </li>
+  <% } %>
+</ul>
+<% } %>

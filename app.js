@@ -1,8 +1,12 @@
 // Require package
 const express = require("express");
 const mongoose = require("mongoose");
+const faker = require("faker");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
+
+// Require model
+const Contacts = require("./Models/contacts"); // only for generate fake data
 
 // Require routes
 const contactsRoutes = require("./routes/contacts");
@@ -39,6 +43,33 @@ app.get("/", (req, res) => {
 });
 
 app.use("/contacts", contactsRoutes);
+
+app.get("/generate-fake-data", (req, res) => {
+  for (let i = 0; i < 20; i++) {
+    var contact = new Contacts();
+
+    contact.firstName = faker.name.firstName();
+    contact.lastName = faker.name.lastName();
+    contact.email = faker.internet.email();
+    contact.phoneNumber = {
+      mobile: faker.phone.phoneNumber(),
+      home: faker.phone.phoneNumber(),
+      work: faker.phone.phoneNumber()
+    };
+    contact.address = {
+      street: faker.address.streetAddress(),
+      city: faker.address.city(),
+      state: faker.address.state(),
+      country: faker.address.country(),
+      zip: faker.address.zipCode()
+    };
+
+    contact.save(err => {
+      if (err) throw err;
+    });
+  }
+  res.redirect("/contacts");
+});
 
 app.use((req, res) =>
   res.status(404).render("404", { pageTitle: "404 Page Not Found" })

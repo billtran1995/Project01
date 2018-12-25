@@ -5,7 +5,8 @@ const router = express.Router();
 const contactsController = require("../controllers/contactsController");
 
 // Contacts
-router.get("/", contactsController.getContacts);
+// router.get("/", contactsController.getContacts);
+router.get("/", contactsController.getContactsWithPagination);
 
 router.get("/create", contactsController.getCreateContactPage);
 

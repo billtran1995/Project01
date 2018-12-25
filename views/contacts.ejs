@@ -2,7 +2,7 @@
 
 <div class="container">
   <h1 style="text-align: center;">Contacts</h1>
-  <% if(contacts) { %>
+  <% if(contacts.length > 0) { %>
   <div class="collection container">
     <% contacts.forEach( contact => {%>
     <div class="collection-item">
@@ -27,9 +27,54 @@
     </div>
     <% }) %>
   </div>
-  <% } else {%>
+
+  <!-- Pagination starts here -->
+  <!-- Data: {contacts, currentPage, pages} -->
+  <!-- Notice: currentPage is type String, so when use to compare -->
+  <!-- with other number, == should be use or we need to convert it to a number -->
+  <!-- before comparing it with a number using === -->
+  <% if (pages > 0) { %>
+  <ul class="pagination">
+    <% if(currentPage == 1) { %>
+    <li class="disabled">
+      <a><i class="material-icons">chevron_left</i></a>
+    </li>
+    <% } else { %>
+    <li>
+      <a href="/contacts/?page=1"><i class="material-icons">chevron_left</i></a>
+    </li>
+    <% } %> <% var pageCheckpoint = (Number(currentPage) > 5 ?
+    Number(currentPage) - 4 : 1) %> <% if (pageCheckpoint !== 1) { %>
+    <li class="disabled"><a>...</a></li>
+    <% } %> <% for (i = pageCheckpoint; i <= (Number(currentPage) + 4) && i <=
+    pages; i++) { %> <% if (i === Number(currentPage)) { %>
+    <li class="active"><a><%= i %></a></li>
+    <% } else { %>
+    <li><a href="/contacts/?page=<%= i %>"><%= i %></a></li>
+    <% } %> <% if (i == Number(currentPage) + 4 && i < pages) { %>
+    <li class="disabled"><a>...</a></li>
+    <% } %> <% } %> <% if (currentPage == pages) { %>
+    <li class="disabled">
+      <a><i class="material-icons">chevron_right</i></a>
+    </li>
+    <% } else { %>
+    <li>
+      <a href="/contacts/?page=<%= pages %>"
+        ><i class="material-icons">chevron_right</i></a
+      >
+    </li>
+    <% } %>
+  </ul>
+  <% } %> <% } else {%>
   <p>There are no contacts to show</p>
   <% } %>
 </div>
+<!--
+  We check number of current page and if this value is less than 5
+  then output pagination link from 1 to currentPage + 4
+  and if this value more than 5 then weill start output pagination link
+  from currentPage -4 to currentPage + 4, thus previous links on 
+  currentPage - 5 will be hide.
+-->
 
 <%- include('partials/footer') %>

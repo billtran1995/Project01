@@ -1,16 +1,38 @@
 const mongoose = require("mongoose");
 
+const contactsPerPage = 5;
+
 // Require model
 const Contacts = require("../Models/contacts");
 
 exports.getContacts = (req, res) => {
   Contacts.find().then(contacts => {
     // res.json(contacts);
-    res.render(
-      "contacts",
-      contacts.length > 0 ? { contacts } : { contacts: null }
-    );
+    res.render("contacts", { contacts });
   });
+};
+
+exports.getContactsWithPagination = (req, res) => {
+  var currentPage = req.query.page || 1;
+  var skip = contactsPerPage * currentPage - contactsPerPage;
+
+  Contacts.find({}, "firstName lastName", { skip, limit: contactsPerPage })
+    .then(contacts => {
+      Contacts.countDocuments()
+        .then(count => {
+          res.render("contacts", {
+            contacts,
+            currentPage,
+            pages: Math.ceil(count / contactsPerPage)
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.getCreateContactPage = (req, res) => {

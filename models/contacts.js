@@ -8,20 +8,20 @@ const contactSchema = new Schema({
   firstName: {
     type: String,
     trim: true,
-    required: [true, "First name is required"],
-    validate: {
-      validator: validator.isAlpha,
-      message: "Numbers and special characters are not allowed."
-    }
+    required: [true, "First name is required"]
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: "Numbers and special characters are not allowed."
+    // }
   },
   lastName: {
     type: String,
     trim: true,
-    required: [true, "Last name is required"],
-    validate: {
-      validator: validator.isAlpha,
-      message: "Numbers and special characters are not allowed."
-    }
+    required: [true, "Last name is required"]
+    // validate: {
+    //   validator: validator.isAlpha,
+    //   message: "Numbers and special characters are not allowed."
+    // }
   },
   phoneNumber: phoneNumberSchema,
   email: {
