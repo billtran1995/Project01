@@ -2,30 +2,81 @@
 
 <div class="container">
   <h1 style="text-align: center;">Contacts</h1>
-  <% if(contacts.length > 0) { %>
-  <div class="collection container">
-    <% contacts.forEach( contact => {%>
-    <div class="collection-item">
-      <div class="row" style="margin-bottom: 10px;">
-        <div class="col m2 s12" style="padding-right:0;">
-          <i
-            class="fas fa-user-circle"
-            style="font-size: 600%; padding-top:5px;"
-          ></i>
+  <div class="container">
+    <div class="search-container">
+      <form action="/contacts" method="GET">
+        <div class="row">
+          <div class="col m1"></div>
+          <div class="col m8">
+            <input type="search" name="search" placeholder="Search.." />
+          </div>
+          <div class="col m2">
+            <button type="submit" class="btn">
+              <i class="material-icons">search</i>
+            </button>
+          </div>
+          <div class="col m1"></div>
         </div>
-        <div class="col m10 s12" style="margin-bottom: 5px; padding-left: 0;">
-          <h5><%= contact.firstName + " " + contact.lastName %></h5>
-          <form
-            action="/contacts/<%= contact._id %>?_method=DELETE"
-            method="post"
-          >
-            <a class="btn" href="/contacts/<%= contact._id %>">View Contact</a>
-            <button class="btn red">Delete</button>
-          </form>
+        <div class="row">
+          <div class="col m1"></div>
+          <div class="col m2 s12">
+            <label style="font-size: 12pt;">Search by:</label>
+          </div>
+          <div class="col m3 s5">
+            <label>
+              <input name="searchBy" type="radio" value="firstName" required />
+              <span>First Name</span>
+            </label>
+          </div>
+          <div class="col m3 s5">
+            <label>
+              <input name="searchBy" type="radio" value="lastName" required />
+              <span>Last Name</span>
+            </label>
+          </div>
+          <div class="col m2 s2">
+            <a href="/contacts"><i class="material-icons">autorenew</i></a>
+          </div>
+          <div class="col m1"></div>
+        </div>
+      </form>
+    </div>
+    <% if(contacts.length > 0) { %>
+    <div class="collection">
+      <% contacts.forEach( contact => {%>
+      <div class="collection-item">
+        <div class="row" style="margin-bottom: 10px;">
+          <div class="col m2 s12" style="padding-right:0;">
+            <i
+              class="fas fa-user-circle"
+              style="font-size: 600%; padding-top:5px;"
+            ></i>
+          </div>
+          <div class="col m1"></div>
+          <div class="col m7 s12" style="margin-bottom: 5px; padding-left: 0;">
+            <h5><%= contact.firstName + " " + contact.lastName %></h5>
+            <form
+              action="/contacts/<%= contact._id %>?_method=DELETE"
+              method="post"
+            >
+              <a class="btn" href="/contacts/<%= contact._id %>">
+                View Contact
+              </a>
+              <button class="btn red">Delete</button>
+            </form>
+          </div>
+          <div class="col m2 s12">
+            <i
+              class="medium material-icons"
+              style="margin-top: 20px; padding-right: 20px;"
+            >
+              star_border
+            </i>
+          </div>
         </div>
       </div>
+      <% }) %>
     </div>
-    <% }) %>
   </div>
 
   <!-- Pagination starts here -->

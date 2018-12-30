@@ -2,18 +2,24 @@
 
 <div class="container">
   <div class="content-box">
-    <h4>Login</h4>
-    <form action="">
+    <h4 class="content-box-title"><%= pageTitle %></h4>
+    <form action="/auth/login" method="POST">
       <div class="input-field">
-        <input type="text" name="username" required />
-        <label for="username">Username</label>
+        <input type="text" name="email" required />
+        <label for="email">Email</label>
       </div>
       <div class="input-field">
         <input type="password" name="password" required />
         <label for="password">Password</label>
       </div>
-      <button type="submit" class="btn">Sign In</button>
+      <button type="submit" class="btn">Sign In</button> <% if(errorMessage) {%>
+      <div class="error-message"><%= errorMessage %></div>
+      <% } %> <% if(successMessage) {%>
+      <div class="success-message"><%= successMessage %></div>
+      <% } %>
     </form>
+    <p>Don't have an account?&nbsp<a href="/auth/signup">Sign up</a></p>
+    <p>Forget password?&nbsp<a href="/auth/reset">Reset password</a></p>
   </div>
 </div>
 

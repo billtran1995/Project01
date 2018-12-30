@@ -3,13 +3,13 @@ const { Schema } = require("mongoose");
 const validator = require("validator");
 
 const userSchema = new Schema({
-  username: {
-    type: String,
-    trim: true,
-    unique: true,
-    minlength: [6, "Username must have at least 6 characters"],
-    required: [true, "Username is required"]
-  },
+  // username: {
+  //   type: String,
+  //   trim: true,
+  //   unique: true,
+  //   minlength: [6, "Username must have at least 6 characters"],
+  //   required: [true, "Username is required"]
+  // },
   email: {
     type: String,
     trim: true,
@@ -24,6 +24,8 @@ const userSchema = new Schema({
     require: true,
     minlength: [6, "Password must have at least 6 characters"]
   },
+  resetToken: String,
+  resetTokenExpiration: Date,
   contacts: [
     {
       type: mongoose.Schema.Types.ObjectId,

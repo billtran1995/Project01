@@ -1,22 +1,40 @@
 <div class="navbar-fixed">
   <nav>
     <div class="nav-wrapper container">
-      <a href="/contacts" class="brand-logo"
-        >Contact Book<i class="material-icons">contacts</i></a
-      >
-      <a href="#!" data-target="mobile-plat" class="sidenav-trigger"
-        ><i class="material-icons">menu</i></a
-      >
+      <a href="/contacts" class="brand-logo" style="font-weight: 500;">
+        Contact <span class="book-title">Book</span>
+      </a>
+      <% if(isAuthenticated) {%>
+      <a href="#!" data-target="mobile-plat" class="sidenav-trigger">
+        <i class="material-icons">menu</i>
+      </a>
       <ul class="right hide-on-med-and-down">
         <li><a class="nav-link" href="/contacts">My Contacts</a></li>
         <li><a class="nav-link" href="/contacts/create">Add Contact</a></li>
-        <li><a class="waves-effect waves-light btn">Log Out</a></li>
+        <li class="logout-btn">
+          <form action="/logout" method="post">
+            <button type="submit" class="waves-effect waves-light btn">
+              Logout
+            </button>
+          </form>
+        </li>
       </ul>
+      <% } %>
     </div>
   </nav>
 </div>
+<% if(isAuthenticated) {%>
 <ul class="sidenav" id="mobile-plat">
-  <li><a class="waves-effect waves-light btn">Log Out</a></li>
+  <li>
+    <h4 style="padding-left: 25px;">Menu</h4>
+    <hr style="width:80%" />
+  </li>
   <li><a href="/contacts">My Contacts</a></li>
   <li><a href="/contacts/create">Add Contact</a></li>
+  <li class="logout-btn">
+    <form action="/logout" method="post">
+      <button type="submit" class="waves-effect waves-light btn">Logout</button>
+    </form>
+  </li>
 </ul>
+<% } %>

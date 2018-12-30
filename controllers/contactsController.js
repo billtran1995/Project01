@@ -1,24 +1,44 @@
 const mongoose = require("mongoose");
 
-const contactsPerPage = 5;
+const contactsPerPage = 10;
 
 // Require model
 const Contacts = require("../Models/contacts");
+const Users = require("../models/users");
 
-exports.getContacts = (req, res) => {
-  Contacts.find().then(contacts => {
-    // res.json(contacts);
-    res.render("contacts", { contacts });
-  });
-};
+// exports.getContacts = (req, res) => {
+//   Contacts.find({ $in: [...req.session.user.contacts] }).then(contacts => {
+//     // res.json(contacts);
+//     res.render("contacts", { contacts });
+//   });
+// };
+
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 exports.getContactsWithPagination = (req, res) => {
   var currentPage = req.query.page || 1;
   var skip = contactsPerPage * currentPage - contactsPerPage;
+  var userContactsID = [...req.user.contacts];
+  var findQuery = { _id: { $in: userContactsID } };
 
-  Contacts.find({}, "firstName lastName", { skip, limit: contactsPerPage })
+  if (req.query.search && req.query.searchBy) {
+    const regex = new RegExp(escapeRegex(req.query.search), "gi");
+    if (req.query.searchBy === "firstName") {
+      findQuery["firstName"] = { $regex: regex };
+    } else {
+      findQuery["lastName"] = { $regex: regex };
+    }
+    console.log(findQuery);
+  }
+
+  Contacts.find(findQuery, "firstName lastName", {
+    skip,
+    limit: contactsPerPage
+  })
     .then(contacts => {
-      Contacts.countDocuments()
+      Contacts.countDocuments({ _id: { $in: userContactsID } })
         .then(count => {
           res.render("contacts", {
             contacts,
@@ -59,7 +79,10 @@ exports.createContact = (req, res) => {
   })
     .then(contact => {
       // res.json(contact);
-      res.redirect("/contacts");
+      req.user.contacts.push(contact._id);
+      req.user.save(() => {
+        res.redirect("/contacts");
+      });
     })
     .catch(err => {
       res.status(406).json(err);
@@ -109,8 +132,7 @@ exports.updateContact = (req, res) => {
       }
     }
   )
-    .then(updatedContact => {
-      // res.json(updatedContact);
+    .then(result => {
       res.redirect("/contacts/" + req.params.id);
     })
     .catch(err => {
@@ -119,10 +141,14 @@ exports.updateContact = (req, res) => {
 };
 
 exports.deleteContact = (req, res) => {
-  Contacts.deleteOne({
-    _id: mongoose.Types.ObjectId(req.params.id)
-  }).then(deletedContact => {
-    // res.json(deletedContact);
-    res.redirect("back");
+  const id = mongoose.Types.ObjectId(req.params.id);
+  req.user.contacts.pull(id);
+  req.user.save(err => {
+    Contacts.deleteOne({
+      _id: id
+    }).then(deletedContact => {
+      // res.json(deletedContact);
+      res.redirect("back");
+    });
   });
 };

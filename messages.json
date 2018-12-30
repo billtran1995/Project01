@@ -1,0 +1,10 @@
+{
+  "emailExisted": "Email already exists, please use another one.",
+  "invalidEmailOrPass": "Invalid email or password.",
+  "noAccountFound": "No account with that email found.",
+  "linkExpired": "Link expired. Please get another one.",
+  "invalidToken": "Invalid or expired token.",
+  "passMustMatch": "Passwords must match.",
+  "emailToResetPass": "Check your email to complete password reset.",
+  "passResetSuccess": "Your password is reset."
+}
