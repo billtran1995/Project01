@@ -22,15 +22,17 @@ exports.getContactsWithPagination = (req, res) => {
   var skip = contactsPerPage * currentPage - contactsPerPage;
   var userContactsID = [...req.user.contacts];
   var findQuery = { _id: { $in: userContactsID } };
+  var isSearching = false;
 
   if (req.query.search && req.query.searchBy) {
     const regex = new RegExp(escapeRegex(req.query.search), "gi");
+    isSearching = true;
+
     if (req.query.searchBy === "firstName") {
       findQuery["firstName"] = { $regex: regex };
     } else {
       findQuery["lastName"] = { $regex: regex };
     }
-    console.log(findQuery);
   }
 
   Contacts.find(findQuery, "firstName lastName", {
@@ -43,7 +45,16 @@ exports.getContactsWithPagination = (req, res) => {
           res.render("contacts", {
             contacts,
             currentPage,
-            pages: Math.ceil(count / contactsPerPage)
+            pages: Math.ceil(count / contactsPerPage),
+            search: {
+              isSearching,
+              searchBy: isSearching
+                ? req.query.search === "firstName"
+                  ? "first name"
+                  : "last name"
+                : null,
+              searchValue: isSearching ? req.query.search : null
+            }
           });
         })
         .catch(err => {

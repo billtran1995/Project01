@@ -118,7 +118,11 @@
   </ul>
   <% } %> <% } else {%>
   <div class="container">
-    <p class="message">You don't have any contacts to show, please add some!</p>
+    <p class="message">
+      <% if(search.isSearching) { %> Contact with <%= search.searchBy %> of '<%=
+      search.searchValue %>' does not exist. <% } else {%> You don't have any
+      contacts to show, please add some! <% } %>
+    </p>
   </div>
   <% } %>
 </div>
