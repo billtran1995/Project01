@@ -8,9 +8,16 @@ module.exports = {
 
     Users.findById(req.session.user._id)
       .then(user => {
+        if (!user) {
+          return next();
+        }
         req.user = user;
         next();
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        // throw new Error(err); This will not trigger the error handler
+        // Inside async code, next should be use to trigger the error handler
+        next(new Error(err));
+      });
   }
 };

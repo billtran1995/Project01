@@ -1,10 +1,12 @@
 {
   "emailExisted": "Email already exists, please use another one.",
   "invalidEmailOrPass": "Invalid email or password.",
+  "invalidEmail": "Please enter a valid email.",
   "noAccountFound": "No account with that email found.",
   "linkExpired": "Link expired. Please get another one.",
   "invalidToken": "Invalid or expired token.",
   "passMustMatch": "Passwords must match.",
+  "passMustMeetSix": "Password must be at least 6 characters.",
   "emailToResetPass": "Check your email to complete password reset.",
   "passResetSuccess": "Your password is reset."
 }

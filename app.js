@@ -10,6 +10,8 @@ const MongodbStore = require("connect-mongodb-session")(session);
 const { isAuthenticated } = require("./middlewares/middleware");
 const flash = require("connect-flash");
 
+const errorController = require("./controllers/errorController");
+
 // Require model
 const Contacts = require("./Models/contacts"); // only for generate fake data
 const Users = require("./models/users");
@@ -18,8 +20,6 @@ const Users = require("./models/users");
 const contactsRoutes = require("./routes/contacts");
 const authRoutes = require("./routes/auth");
 
-var connectionString =
-  "mongodb://Billchan1995:B02044594@ds119728.mlab.com:19728/db01";
 var connectionStringForLocal = "mongodb://localhost:27017/DB01_test";
 mongoose.Promise = global.Promise;
 
@@ -112,9 +112,19 @@ app.post("/logout", (req, res) => {
   });
 });
 
-app.use((req, res) =>
-  res.status(404).render("404", { pageTitle: "404 Page Not Found" })
-);
+app.get("/500", errorController.get505);
+
+app.use(errorController.get404);
+
+// Error handling middleware
+// This will catch every error thrown
+app.use((error, req, res, next) => {
+  // res.redirect("/500");
+  // The above should be careful, cause it may trigger infinite loop
+  // especially when middleware run on all route
+  // middleware throw error => this handle and redirect => middleware throw error => ...repeatedly
+  res.status(500).render("500", { pageTitle: "500 An Error Occurred" });
+});
 
 app.listen(8080, () => {
   console.log("Server started");

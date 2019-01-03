@@ -3,18 +3,22 @@
 <div class="container">
   <div class="content-box">
     <h4 class="content-box-title"><%= pageTitle %></h4>
-    <form action="/auth/reset" method="POST" novalidate>
+    <form action="/auth/activate/<%= userid %>" method="POST" novalidate>
       <div class="input-field">
-        <input type="email" name="email" required />
-        <label for="email">Email</label>
+        <input type="text" name="passcode" maxlength="8" required />
+        <label for="passcode">Passcode</label>
       </div>
-      <button type="submit" class="btn">Reset Password</button> <%
+      <button type="submit" class="btn">Activate Account</button> <%
       if(errorMessage) {%>
       <div class="error-message"><%= errorMessage %></div>
       <% } %><% if(successMessage) {%>
       <div class="success-message"><%= successMessage %></div>
       <% } %>
     </form>
+    <p>
+      Don't receive a passcode?&nbsp
+      <a href="/auth/resend/<%= userid %>">Resend</a>
+    </p>
   </div>
 </div>
 

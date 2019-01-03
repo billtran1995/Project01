@@ -91,3 +91,9 @@ th {
 .search-container input {
   height: 35px !important;
 }
+
+.form-validation-message {
+  color: red;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

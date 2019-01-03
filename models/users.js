@@ -26,6 +26,11 @@ const userSchema = new Schema({
   },
   resetToken: String,
   resetTokenExpiration: Date,
+  activate: {
+    isActivated: { type: Boolean, default: false },
+    passcode: String,
+    passcodeExpiration: Date
+  },
   contacts: [
     {
       type: mongoose.Schema.Types.ObjectId,

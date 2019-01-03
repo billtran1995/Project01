@@ -7,8 +7,8 @@ const addressSchema = require("./address");
 const contactSchema = new Schema({
   firstName: {
     type: String,
-    trim: true,
-    required: [true, "First name is required"]
+    trim: true
+    // required: [true, "First name is required"]
     // validate: {
     //   validator: validator.isAlpha,
     //   message: "Numbers and special characters are not allowed."
@@ -16,8 +16,8 @@ const contactSchema = new Schema({
   },
   lastName: {
     type: String,
-    trim: true,
-    required: [true, "Last name is required"]
+    trim: true
+    // required: [true, "Last name is required"]
     // validate: {
     //   validator: validator.isAlpha,
     //   message: "Numbers and special characters are not allowed."
@@ -26,11 +26,11 @@ const contactSchema = new Schema({
   phoneNumber: phoneNumberSchema,
   email: {
     type: String,
-    trim: true,
-    validate: {
-      validator: validator.isEmail,
-      message: "{value} is invalid."
-    }
+    trim: true
+    // validate: {
+    //   validator: validator.isEmail,
+    //   message: "{value} is invalid."
+    // }
   },
   address: addressSchema
 });

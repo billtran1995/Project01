@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const util = require("../util/util");
+const { validationResult } = require("express-validator/check");
 
 const contactsPerPage = 10;
 
@@ -17,7 +19,7 @@ function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
 
-exports.getContactsWithPagination = (req, res) => {
+exports.getContactsWithPagination = (req, res, next) => {
   var currentPage = req.query.page || 1;
   var skip = contactsPerPage * currentPage - contactsPerPage;
   var userContactsID = [...req.user.contacts];
@@ -58,19 +60,56 @@ exports.getContactsWithPagination = (req, res) => {
           });
         })
         .catch(err => {
-          console.log(err);
+          return next(util.createError505(err));
         });
     })
     .catch(err => {
-      console.log(err);
+      return next(util.createError505(err));
     });
 };
 
 exports.getCreateContactPage = (req, res) => {
-  res.render("addContact");
+  res.render("addContact", {
+    pageTitle: "Add Contact",
+    errorMessage: [],
+    oldInput: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      mobile: "",
+      home: "",
+      work: "",
+      street: "",
+      city: "",
+      state: "",
+      country: "",
+      zip: ""
+    }
+  });
 };
 
-exports.createContact = (req, res) => {
+exports.createContact = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("addContact", {
+      pageTitle: "Add Contact",
+      errorMessage: errors.array(),
+      oldInput: {
+        firstName: req.body.firstName ? req.body.firstName : "",
+        lastName: req.body.lastName ? req.body.lastName : "",
+        email: req.body.email ? req.body.email : "",
+        mobile: req.body.mobile ? req.body.mobile : "",
+        home: req.body.home ? req.body.home : "",
+        work: req.body.work ? req.body.work : "",
+        street: req.body.street ? req.body.street : "",
+        city: req.body.city ? req.body.city : "",
+        state: req.body.state ? req.body.state : "",
+        country: req.body.country ? req.body.country : "",
+        zip: req.body.zip ? req.body.zip : ""
+      }
+    });
+  }
+
   Contacts.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -79,7 +118,7 @@ exports.createContact = (req, res) => {
       home: req.body.home ? req.body.home : null,
       work: req.body.work ? req.body.work : null
     },
-    email: req.body.email,
+    email: req.body.email ? req.body.email : null,
     address: {
       street: req.body.street ? req.body.street : null,
       city: req.body.city ? req.body.city : null,
@@ -96,17 +135,19 @@ exports.createContact = (req, res) => {
       });
     })
     .catch(err => {
-      res.status(406).json(err);
+      return next(util.createError505(err));
     });
 };
 
-exports.getContactById = (req, res) => {
-  Contacts.findById({ _id: mongoose.Types.ObjectId(req.params.id) }).then(
-    contact => {
+exports.getContactById = (req, res, next) => {
+  Contacts.findById({ _id: mongoose.Types.ObjectId(req.params.id) })
+    .then(contact => {
       // res.json(contact);
       res.render("show", { contact });
-    }
-  );
+    })
+    .catch(err => {
+      return next(util.createError505(err));
+    });
 };
 
 exports.getUpdateForm = (req, res) => {
@@ -114,13 +155,40 @@ exports.getUpdateForm = (req, res) => {
     contact => {
       // res.json(contact);
       res.render("update", {
-        contact
+        pageTitle: "Update Form",
+        contact,
+        errorMessage: []
       });
     }
   );
 };
 
-exports.updateContact = (req, res) => {
+exports.updateContact = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("update", {
+      pageTitle: "Update Form",
+      errorMessage: errors.array(),
+      contact: {
+        firstName: req.body.firstName ? req.body.firstName : "",
+        lastName: req.body.lastName ? req.body.lastName : "",
+        email: req.body.email ? req.body.email : "",
+        phoneNumber: {
+          mobile: req.body.mobile ? req.body.mobile : "",
+          home: req.body.home ? req.body.home : "",
+          work: req.body.work ? req.body.work : ""
+        },
+        address: {
+          street: req.body.street ? req.body.street : "",
+          city: req.body.city ? req.body.city : "",
+          state: req.body.state ? req.body.state : "",
+          country: req.body.country ? req.body.country : "",
+          zip: req.body.zip ? req.body.zip : ""
+        }
+      }
+    });
+  }
+
   Contacts.updateOne(
     { _id: mongoose.Types.ObjectId(req.params.id) },
     {
@@ -132,7 +200,7 @@ exports.updateContact = (req, res) => {
           home: req.body.home ? req.body.home : null,
           work: req.body.work ? req.body.work : null
         },
-        email: req.body.email,
+        email: req.body.email ? req.body.email : null,
         address: {
           street: req.body.street ? req.body.street : null,
           city: req.body.city ? req.body.city : null,
@@ -147,19 +215,27 @@ exports.updateContact = (req, res) => {
       res.redirect("/contacts/" + req.params.id);
     })
     .catch(err => {
-      res.status(406).json(err);
+      return next(util.createError505(err));
     });
 };
 
-exports.deleteContact = (req, res) => {
+exports.deleteContact = (req, res, next) => {
   const id = mongoose.Types.ObjectId(req.params.id);
   req.user.contacts.pull(id);
   req.user.save(err => {
+    if (err) {
+      return next(util.createError505(err));
+    }
+
     Contacts.deleteOne({
       _id: id
-    }).then(deletedContact => {
-      // res.json(deletedContact);
-      res.redirect("back");
-    });
+    })
+      .then(deletedContact => {
+        // res.json(deletedContact);
+        res.redirect("back");
+      })
+      .catch(err => {
+        return next(util.createError505(err));
+      });
   });
 };

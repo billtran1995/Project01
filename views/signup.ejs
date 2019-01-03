@@ -3,17 +3,36 @@
 <div class="container">
   <div class="content-box">
     <h4 class="content-box-title"><%= pageTitle %></h4>
-    <form action="/auth/signup" method="POST">
+    <form action="/auth/signup" method="POST" novalidate>
       <div class="input-field">
-        <input type="email" name="email" required />
+        <input
+          class="<%= validationErrors.find(error => error.param === 'email') ? 'invalid' : '' %>"
+          type="email"
+          name="email"
+          value="<%= oldInput['email'] %>"
+          required
+        />
         <label for="email">Email</label>
       </div>
       <div class="input-field">
-        <input type="password" name="password" required />
+        <input
+          class="<%= validationErrors.find(error => error.param === 'password')  ? 'invalid' : '' %>"
+          type="password"
+          name="password"
+          value="<%= oldInput['password'] %>"
+          required
+        />
         <label for="password">Password</label>
       </div>
       <div class="input-field">
-        <input type="password" name="confirmPassword" required />
+        <input
+          class="<%= validationErrors.find(error => error.param ===
+        'confirmPassword') ? 'invalid' : '' %>"
+          type="password"
+          name="confirmPassword"
+          value="<%= oldInput['confirmPassword'] %>"
+          required
+        />
         <label for="confirmPassword">Confirm Password</label>
       </div>
       <button type="submit" class="btn">Sign Up</button> <% if(errorMessage) {%>

@@ -17,6 +17,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "express-validator": "^5.3.1",
     "method-override": "^3.0.0",
     "mongoose": "^5.4.0",
     "nodemailer": "^4.7.0",

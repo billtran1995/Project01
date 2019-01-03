@@ -1,17 +1,19 @@
 <%- include('partials/header') %> <%- include('partials/navbar') %>
 
 <div class="container">
-  <h4>Update Form</h4>
+  <h4><%= pageTitle %></h4>
   <div class="row">
     <form
       class="col m12"
       action="/contacts/<%= contact._id %>/update?_method=PATCH"
       method="post"
+      novalidate
     >
       <div class="row"><label style="font-size: 14pt;">Name:</label></div>
       <div class="row">
         <div class="input-field col m6">
           <input
+            class="<%= errorMessage.find(error => error.param === 'firstName') ? 'invalid' : '' %>"
             type="text"
             name="firstName"
             value="<%=contact.firstName%>"
@@ -21,6 +23,7 @@
         </div>
         <div class="input-field col m6">
           <input
+            class="<%= errorMessage.find(error => error.param === 'lastName') ? 'invalid' : '' %>"
             name="lastName"
             type="text"
             value="<%=contact.lastName%>"
@@ -34,8 +37,9 @@
       </div>
       <div class="row">
         <div class="input-field col m6">
-          <input name="email" type="email" value=<%=contact.email%>>
-          <label for="email">Email</label>
+          <input class="<%= errorMessage.find(error => error.param === 'email')
+          ? 'invalid' : '' %>" name="email" type="email"
+          value=<%=contact.email%>> <label for="email">Email</label>
         </div>
       </div>
       <div class="row">
@@ -43,25 +47,29 @@
       </div>
       <div class="row">
         <div class="input-field col m6">
-          <input name="mobile" type="text"
+          <input class="<%= errorMessage.find(error => error.param === 'mobile')
+          ? 'invalid' : '' %>" name="mobile" type="text"
           value=<%=contact.phoneNumber.mobile%>>
           <label for="mobile">Mobile</label>
         </div>
         <div class="input-field col m6">
-          <input name="home" type="text" value=<%=contact.phoneNumber.home%>>
-          <label for="home">Home</label>
+          <input class="<%= errorMessage.find(error => error.param === 'home') ?
+          'invalid' : '' %>" name="home" type="text"
+          value=<%=contact.phoneNumber.home%>> <label for="home">Home</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col m6">
-          <input name="work" type="text" value=<%=contact.phoneNumber.work%>>
-          <label for="work">Work</label>
+          <input class="<%= errorMessage.find(error => error.param === 'work') ?
+          'invalid' : '' %>" name="work" type="text"
+          value=<%=contact.phoneNumber.work%>> <label for="work">Work</label>
         </div>
       </div>
       <div class="row"><label style="font-size: 14pt;">Address:</label></div>
       <div class="row">
         <div class="input-field col m6">
           <input
+            class="<%= errorMessage.find(error => error.param === 'street') ? 'invalid' : '' %>"
             name="street"
             type="text"
             value="<%=contact.address.street%>"
@@ -69,17 +77,28 @@
           <label for="street">street</label>
         </div>
         <div class="input-field col m6">
-          <input name="city" type="text" value="<%=contact.address.city%>" />
+          <input
+            class="<%= errorMessage.find(error => error.param === 'city') ? 'invalid' : '' %>"
+            name="city"
+            type="text"
+            value="<%=contact.address.city%>"
+          />
           <label for="city">City</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col m6">
-          <input name="state" type="text" value="<%=contact.address.state%>" />
+          <input
+            class="<%= errorMessage.find(error => error.param === 'state') ? 'invalid' : '' %>"
+            name="state"
+            type="text"
+            value="<%=contact.address.state%>"
+          />
           <label for="state">State</label>
         </div>
         <div class="input-field col m4">
           <input
+            class="<%= errorMessage.find(error => error.param === 'country') ? 'invalid' : '' %>"
             name="country"
             type="text"
             value="<%=contact.address.country%>"
@@ -87,14 +106,22 @@
           <label for="country">Country</label>
         </div>
         <div class="input-field col m2">
-          <input name="zip" type="text" value=<%=contact.address.zip%>>
-          <label for="zip">Zip</label>
+          <input class="<%= errorMessage.find(error => error.param === 'zip') ?
+          'invalid' : '' %>" name="zip" type="text"
+          value=<%=contact.address.zip%>> <label for="zip">Zip</label>
         </div>
       </div>
       <div class="row">
-        <button class="waves-effect waves-light btn right" type="submit">
-          Save
-        </button>
+        <div class="col m10">
+          <% if(errorMessage) { %> <% errorMessage.forEach(error => { %>
+          <p class="form-validation-message"><%= error.msg %></p>
+          <% }) %> <% } %>
+        </div>
+        <div class="col m2">
+          <button class="waves-effect waves-light btn right" type="submit">
+            Save
+          </button>
+        </div>
       </div>
     </form>
   </div>
