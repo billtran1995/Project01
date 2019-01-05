@@ -95,17 +95,17 @@ exports.createContact = (req, res, next) => {
       pageTitle: "Add Contact",
       errorMessage: errors.array(),
       oldInput: {
-        firstName: req.body.firstName ? req.body.firstName : "",
-        lastName: req.body.lastName ? req.body.lastName : "",
-        email: req.body.email ? req.body.email : "",
-        mobile: req.body.mobile ? req.body.mobile : "",
-        home: req.body.home ? req.body.home : "",
-        work: req.body.work ? req.body.work : "",
-        street: req.body.street ? req.body.street : "",
-        city: req.body.city ? req.body.city : "",
-        state: req.body.state ? req.body.state : "",
-        country: req.body.country ? req.body.country : "",
-        zip: req.body.zip ? req.body.zip : ""
+        firstName: req.body.firstName || "",
+        lastName: req.body.lastName || "",
+        email: req.body.email || "",
+        mobile: req.body.mobile || "",
+        home: req.body.home || "",
+        work: req.body.work || "",
+        street: req.body.street || "",
+        city: req.body.city || "",
+        state: req.body.state || "",
+        country: req.body.country || "",
+        zip: req.body.zip || ""
       }
     });
   }
@@ -114,17 +114,17 @@ exports.createContact = (req, res, next) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     phoneNumber: {
-      mobile: req.body.mobile ? req.body.mobile : null,
-      home: req.body.home ? req.body.home : null,
-      work: req.body.work ? req.body.work : null
+      mobile: req.body.mobile || null,
+      home: req.body.home || null,
+      work: req.body.work || null
     },
-    email: req.body.email ? req.body.email : null,
+    email: req.body.email || null,
     address: {
-      street: req.body.street ? req.body.street : null,
-      city: req.body.city ? req.body.city : null,
-      state: req.body.state ? req.body.state : null,
-      country: req.body.country ? req.body.country : null,
-      zip: req.body.zip ? req.body.zip : null
+      street: req.body.street || null,
+      city: req.body.city || null,
+      state: req.body.state || null,
+      country: req.body.country || null,
+      zip: req.body.zip || null
     }
   })
     .then(contact => {
@@ -170,20 +170,21 @@ exports.updateContact = (req, res, next) => {
       pageTitle: "Update Form",
       errorMessage: errors.array(),
       contact: {
-        firstName: req.body.firstName ? req.body.firstName : "",
-        lastName: req.body.lastName ? req.body.lastName : "",
-        email: req.body.email ? req.body.email : "",
+        _id: req.params.id,
+        firstName: req.body.firstName || "",
+        lastName: req.body.lastName || "",
+        email: req.body.email || "",
         phoneNumber: {
-          mobile: req.body.mobile ? req.body.mobile : "",
-          home: req.body.home ? req.body.home : "",
+          mobile: req.body.mobile || "",
+          home: req.body.home || "",
           work: req.body.work ? req.body.work : ""
         },
         address: {
-          street: req.body.street ? req.body.street : "",
-          city: req.body.city ? req.body.city : "",
-          state: req.body.state ? req.body.state : "",
-          country: req.body.country ? req.body.country : "",
-          zip: req.body.zip ? req.body.zip : ""
+          street: req.body.street || "",
+          city: req.body.city || "",
+          state: req.body.state || "",
+          country: req.body.country || "",
+          zip: req.body.zip || ""
         }
       }
     });
@@ -196,17 +197,17 @@ exports.updateContact = (req, res, next) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         phoneNumber: {
-          mobile: req.body.mobile ? req.body.mobile : null,
-          home: req.body.home ? req.body.home : null,
-          work: req.body.work ? req.body.work : null
+          mobile: req.body.mobile || null,
+          home: req.body.home || null,
+          work: req.body.work || null
         },
-        email: req.body.email ? req.body.email : null,
+        email: req.body.email || null,
         address: {
-          street: req.body.street ? req.body.street : null,
-          city: req.body.city ? req.body.city : null,
-          state: req.body.state ? req.body.state : null,
-          country: req.body.country ? req.body.country : null,
-          zip: req.body.zip ? req.body.zip : null
+          street: req.body.street || null,
+          city: req.body.city || null,
+          state: req.body.state || null,
+          country: req.body.country || null,
+          zip: req.body.zip || null
         }
       }
     }

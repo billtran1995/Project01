@@ -9,6 +9,7 @@ const session = require("express-session");
 const MongodbStore = require("connect-mongodb-session")(session);
 const { isAuthenticated } = require("./middlewares/middleware");
 const flash = require("connect-flash");
+const request = require("request");
 
 const errorController = require("./controllers/errorController");
 
@@ -110,6 +111,42 @@ app.post("/logout", (req, res) => {
   req.session.destroy(err => {
     res.redirect("/");
   });
+});
+
+app.get("/getLocation", (req, res) => {
+  let street = req.query.street;
+  let city = req.query.city;
+  let state = req.query.state;
+  let country = req.query.country;
+  let address = `${street}, ${city}, ${state}, ${country}`;
+
+  let encodedText = encodeURIComponent(address);
+  request(
+    {
+      url: `https://maps.googleapis.com/maps/api/geocode/json?key=${
+        process.env.MAP_API_KEY
+      }&address=${encodedText}`,
+      json: true
+    },
+    (err, response, body) => {
+      if (err) {
+        return res.json({ status: "ERROR" });
+      } else if (response.statusCode === 400) {
+        return res.json({ status: "ZERO_RESULTS" });
+      } else if (response.statusCode === 200) {
+        if (body.status === "OK") {
+          return res.json({
+            // latitude: body.results[0].geometry.location.lat,
+            // longitude: body.results[0].geometry.location.lng,
+            address: body.results[0].formatted_address,
+            status: "OK"
+          });
+        } else {
+          return res.json({ status: "ZERO_RESULTS" });
+        }
+      }
+    }
+  );
 });
 
 app.get("/500", errorController.get505);

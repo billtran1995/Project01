@@ -9,19 +9,19 @@
         <table>
           <tr>
             <th>Street:</th>
-            <td><%= contact.address.street %></td>
+            <td id="street"><%= contact.address.street %></td>
           </tr>
           <tr>
             <th>City:</th>
-            <td><%= contact.address.city %></td>
+            <td id="city"><%= contact.address.city %></td>
             <th>State:</th>
-            <td><%= contact.address.state %></td>
+            <td id="state"><%= contact.address.state %></td>
           </tr>
           <tr>
             <th>Country:</th>
-            <td><%= contact.address.country %></td>
+            <td id="country"><%= contact.address.country %></td>
             <th>ZIP:</th>
-            <td><%= contact.address.zip %></td>
+            <td id="zip"><%= contact.address.zip %></td>
           </tr>
           <tr>
             <th>Email:</th>
@@ -60,13 +60,48 @@
       </div>
     </div>
     <div style="margin-bottom: 20px;">
+      <a class="waves-effect waves-light btn blue" href="/contacts"> Back </a>
       <a
         class="waves-effect waves-light btn"
         href="/contacts/<%= contact._id %>/update"
-        >Update Contact</a
       >
+        Update Contact
+      </a>
+      <% if(contact.address.street && (contact.address.city ||
+      contact.address.state || contact.address.country)) { %>
+      <button class="getLocation waves-effect waves-light btn yellow darken-1">
+        Get Location
+      </button>
+      <% } %>
+      <p class="getLocationMessage error-message"></p>
     </div>
   </div>
 </div>
 
+<script>
+  let street = $("#street").html();
+  let city = $("#city").html();
+  let state = $("#state").html();
+  let country = $("#country").html();
+
+  $(".getLocation").on("click", e => {
+    $.ajax({
+      dataType: "json",
+      url: "/getLocation",
+      data: { street, city, state, country },
+      success: function(data) {
+        if (data.status === "OK") {
+          // let latitude = data.latitude;
+          // let longitude = data.longitude;
+          window.open(
+            `https://www.google.com/maps/search/?api=1&query=${data.address}`,
+            "_blank"
+          );
+        } else {
+          $(".getLocationMessage").html("Could not find location.");
+        }
+      }
+    });
+  });
+</script>
 <%-include("./partials/footer")%>
