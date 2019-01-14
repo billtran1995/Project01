@@ -1,10 +1,10 @@
 <%- include('partials/header') %> <%- include('partials/navbar') %>
 
 <div class="container" id="main">
-  <h1 style="text-align: center;">Contacts</h1>
+  <h1 style="text-align: center;">My Favorites</h1>
   <div class="container">
     <div class="search-container">
-      <form action="/contacts" method="GET">
+      <form action="/contacts/myfav" method="GET">
         <div class="row">
           <div class="col m1"></div>
           <div class="col m9">
@@ -64,9 +64,9 @@
               </i>
 
               <!-- <form
-              action="/contacts/<%= contact._id %>?_method=DELETE"
-              method="post"
-            > -->
+                    action="/contacts/<%= contact._id %>?_method=DELETE"
+                    method="post"
+                  > -->
             </div>
             <div style="padding-top: 15px;">
               <a
@@ -78,8 +78,8 @@
               </a>
 
               <!-- <button class="btn blue" onclick="addToFav(this)">
-              Add to favorite
-            </button> -->
+                    Add to favorite
+                  </button> -->
               <input
                 type="hidden"
                 name="contactID"
@@ -115,7 +115,9 @@
     </li>
     <% } else { %>
     <li>
-      <a href="/contacts/?page=1"><i class="material-icons">chevron_left</i></a>
+      <a href="/contacts/myfav/?page=1"
+        ><i class="material-icons">chevron_left</i></a
+      >
     </li>
     <% } %> <% var pageCheckpoint = (Number(currentPage) > 5 ?
     Number(currentPage) - 4 : 1) %> <% if (pageCheckpoint !== 1) { %>
@@ -124,7 +126,7 @@
     pages; i++) { %> <% if (i === Number(currentPage)) { %>
     <li class="active"><a><%= i %></a></li>
     <% } else { %>
-    <li><a href="/contacts/?page=<%= i %>"><%= i %></a></li>
+    <li><a href="/contacts/myfav/?page=<%= i %>"><%= i %></a></li>
     <% } %> <% if (i == Number(currentPage) + 4 && i < pages) { %>
     <li class="disabled"><a>...</a></li>
     <% } %> <% } %> <% if (currentPage == pages) { %>
@@ -133,7 +135,7 @@
     </li>
     <% } else { %>
     <li>
-      <a href="/contacts/?page=<%= pages %>"
+      <a href="/contacts/myfav/?page=<%= pages %>"
         ><i class="material-icons">chevron_right</i></a
       >
     </li>
@@ -143,33 +145,24 @@
   <div class="container">
     <p class="message">
       <% if(search.isSearching) { %> Contact with <%= search.searchBy %> of '<%=
-      search.searchValue %>' does not exist. <% } else {%> You don't have any
-      contacts to show, please add some! <% } %>
+      search.searchValue %>' is not in your favorite contacts. <% } else {%> You
+      don't have any contacts to show, please add some! <% } %>
     </p>
   </div>
   <% } %>
 </div>
 <!--
-  We check number of current page and if this value is less than 5
-  then output pagination link from 1 to currentPage + 4
-  and if this value more than 5 then weill start output pagination link
-  from currentPage -4 to currentPage + 4, thus previous links on 
-  currentPage - 5 will be hide.
--->
+        We check number of current page and if this value is less than 5
+        then output pagination link from 1 to currentPage + 4
+        and if this value more than 5 then weill start output pagination link
+        from currentPage -4 to currentPage + 4, thus previous links on 
+        currentPage - 5 will be hide.
+      -->
 <script>
-  // document.addEventListener("DOMContentLoaded", e => {
   const deleteContact = btn => {
     const thisContact = btn.closest(".collection-item");
     const thisContactID = btn.parentNode.querySelector("[name=contactID]")
       .value;
-    // const main = document.querySelector("#main");
-    // const collection = main.querySelector(".collection");
-
-    console.log();
-    // console.log(btn);
-    // console.log(thisContact);
-    // console.log(thisContactID);
-    // console.log(btn.parentNode.querySelector("[name=contactID]"));
     fetch("/contacts/" + thisContactID, {
       method: "DELETE"
     })
@@ -182,38 +175,23 @@
   };
 
   const addToFav = btn => {
+    const thisContact = btn.closest(".collection-item");
     const thisContactID = btn.parentNode.querySelector("[name=contactID]")
       .value;
     let star = btn.querySelector(".material-icons");
-
-    if (star.innerHTML !== "star") {
-      console.log("add to favorite");
-      fetch("/contacts/isFav", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _id: thisContactID, isFav: true })
+    console.log("remove from favorite");
+    fetch("/contacts/isFav", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _id: thisContactID, isFav: false })
+    })
+      .then(result => {
+        return result.json();
       })
-        .then(result => {
-          return result.json();
-        })
-        .then(data => {
-          star.innerHTML = "star";
-        });
-    } else {
-      console.log("remove from favorite");
-      fetch("/contacts/isFav", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _id: thisContactID, isFav: false })
-      })
-        .then(result => {
-          return result.json();
-        })
-        .then(data => {
-          star.innerHTML = "star-border";
-        });
-    }
+      .then(data => {
+        thisContact.parentNode.removeChild(thisContact);
+      });
   };
-  // });
 </script>
+
 <%- include('partials/footer') %>

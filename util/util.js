@@ -1,5 +1,5 @@
 module.exports = {
-  createError505: err => {
+  createError500: err => {
     const error = new Error(err);
     error.httpStatusCode = 500;
     return error;

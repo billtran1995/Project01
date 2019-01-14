@@ -6,8 +6,10 @@
 
        if(window.location.pathname === "/contacts") {
           $('a[href="/contacts"]').parent().addClass("active");
+       } else if (window.location.pathname === "/contacts/myfav") {
+          $('a[href="/contacts/myfav"]').parent().addClass("active");
        } else if (window.location.pathname === "/contacts/create") {
-	  $('a[href="/contacts/create"]').parent().addClass("active");
+	       $('a[href="/contacts/create"]').parent().addClass("active");
        }
     </script>   
    </body>

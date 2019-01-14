@@ -67,7 +67,7 @@ th {
 }
 
 .landing-content {
-  margin-top: 20vh;
+  margin-top: 30vh;
   text-align: center;
   color: white;
 }
@@ -96,4 +96,8 @@ th {
   color: red;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.small.material-icons:hover {
+  cursor: pointer;
 }

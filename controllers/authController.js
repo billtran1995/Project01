@@ -105,7 +105,7 @@ exports.postSignUp = (req, res) => {
     // res.redirect("/auth/login");
     // })
     .catch(err => {
-      console.log(err);
+      return next(util.createError500(err));
     });
 };
 
@@ -335,7 +335,7 @@ exports.postReset = (req, res) => {
         res.redirect("/auth/reset");
       })
       .catch(err => {
-        console.log(err);
+        return next(util.createError500(err));
       });
   });
 };
@@ -367,7 +367,7 @@ exports.getNewPassword = (req, res) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      return next(util.createError500(err));
     });
 };
 

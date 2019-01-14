@@ -12,6 +12,8 @@ router.get("/", contactsController.getContactsWithPagination);
 
 router.get("/create", contactsController.getCreateContactPage);
 
+router.get("/myfav", contactsController.getContactsWithPagination);
+
 router.post(
   "/create",
   [
@@ -79,5 +81,7 @@ router.patch(
 );
 
 router.delete("/:id", contactsController.deleteContact);
+
+router.post("/isFav", contactsController.addToFav);
 
 module.exports = router;

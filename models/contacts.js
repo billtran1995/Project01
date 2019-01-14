@@ -32,7 +32,11 @@ const contactSchema = new Schema({
     //   message: "{value} is invalid."
     // }
   },
-  address: addressSchema
+  address: addressSchema,
+  isFav: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = mongoose.model("contact", contactSchema);

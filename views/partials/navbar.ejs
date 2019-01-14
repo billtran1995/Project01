@@ -2,7 +2,7 @@
   <nav>
     <div class="nav-wrapper container">
       <a href="/contacts" class="brand-logo" style="font-weight: 500;">
-        Contact <span class="book-title">Book</span>
+        Contact<span class="book-title">Book</span>
       </a>
       <% if(isAuthenticated) {%>
       <a href="#!" data-target="mobile-plat" class="sidenav-trigger">
@@ -10,6 +10,7 @@
       </a>
       <ul class="right hide-on-med-and-down">
         <li><a class="nav-link" href="/contacts">My Contacts</a></li>
+        <li><a class="nav-link" href="/contacts/myfav">My Favorites</a></li>
         <li><a class="nav-link" href="/contacts/create">Add Contact</a></li>
         <li class="logout-btn">
           <form action="/logout" method="post">
@@ -30,6 +31,7 @@
     <hr style="width:80%" />
   </li>
   <li><a href="/contacts">My Contacts</a></li>
+  <li><a href="/contacts/myfav">My Favorites</a></li>
   <li><a href="/contacts/create">Add Contact</a></li>
   <li class="logout-btn">
     <form action="/logout" method="post">
