@@ -107,41 +107,8 @@
   <!-- Notice: currentPage is type String, so when use to compare -->
   <!-- with other number, == should be use or we need to convert it to a number -->
   <!-- before comparing it with a number using === -->
-  <% if (pages > 0) { %>
-  <ul class="pagination">
-    <% if(currentPage == 1) { %>
-    <li class="disabled">
-      <a><i class="material-icons">chevron_left</i></a>
-    </li>
-    <% } else { %>
-    <li>
-      <a href="/contacts/myfav/?page=1"
-        ><i class="material-icons">chevron_left</i></a
-      >
-    </li>
-    <% } %> <% var pageCheckpoint = (Number(currentPage) > 5 ?
-    Number(currentPage) - 4 : 1) %> <% if (pageCheckpoint !== 1) { %>
-    <li class="disabled"><a>...</a></li>
-    <% } %> <% for (i = pageCheckpoint; i <= (Number(currentPage) + 4) && i <=
-    pages; i++) { %> <% if (i === Number(currentPage)) { %>
-    <li class="active"><a><%= i %></a></li>
-    <% } else { %>
-    <li><a href="/contacts/myfav/?page=<%= i %>"><%= i %></a></li>
-    <% } %> <% if (i == Number(currentPage) + 4 && i < pages) { %>
-    <li class="disabled"><a>...</a></li>
-    <% } %> <% } %> <% if (currentPage == pages) { %>
-    <li class="disabled">
-      <a><i class="material-icons">chevron_right</i></a>
-    </li>
-    <% } else { %>
-    <li>
-      <a href="/contacts/myfav/?page=<%= pages %>"
-        ><i class="material-icons">chevron_right</i></a
-      >
-    </li>
-    <% } %>
-  </ul>
-  <% } %> <% } else {%>
+  <% if (pages > 0) { %> <%- include('partials/pagination', {currentPage, pages,
+  path}) %> <% } %> <% } else {%>
   <div class="container">
     <p class="message">
       <% if(search.isSearching) { %> Contact with <%= search.searchBy %> of '<%=
@@ -189,7 +156,8 @@
         return result.json();
       })
       .then(data => {
-        thisContact.parentNode.removeChild(thisContact);
+        // thisContact.parentNode.removeChild(thisContact);
+        $(thisContact).fadeOut(1000, () => thisContact.remove());
       });
   };
 </script>

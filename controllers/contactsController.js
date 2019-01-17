@@ -1,8 +1,19 @@
 const mongoose = require("mongoose");
 const util = require("../util/util");
+const request = require("request");
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
 const { validationResult } = require("express-validator/check");
 
-const contactsPerPage = 10;
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: process.env.SENDGRID_API_KEY
+    }
+  })
+);
+
+const contactsPerPage = 5;
 
 // Require model
 const Contacts = require("../Models/contacts");
@@ -23,11 +34,13 @@ exports.getContactsWithPagination = (req, res, next) => {
   var currentPage = req.query.page || 1;
   var skip = contactsPerPage * currentPage - contactsPerPage;
   var userContactsID = [...req.user.contacts];
-  var findQuery = { _id: { $in: userContactsID } };
+  var findQuery = (countQuery = { _id: { $in: userContactsID } });
   var isSearching = false;
+  var path = req.originalUrl.split("?")[0];
 
   if (req.originalUrl.split("?")[0] === "/contacts/myfav") {
     findQuery["isFav"] = true;
+    countQuery["isFav"] = true;
   }
 
   if (req.query.search && req.query.searchBy) {
@@ -46,27 +59,23 @@ exports.getContactsWithPagination = (req, res, next) => {
     limit: contactsPerPage
   })
     .then(contacts => {
-      Contacts.countDocuments({ _id: { $in: userContactsID } })
+      Contacts.countDocuments(countQuery)
         .then(count => {
-          res.render(
-            req.originalUrl.split("?")[0] !== "/contacts/myfav"
-              ? "contacts"
-              : "myfav",
-            {
-              contacts,
-              currentPage,
-              pages: Math.ceil(count / contactsPerPage),
-              search: {
-                isSearching,
-                searchBy: isSearching
-                  ? req.query.search === "firstName"
-                    ? "first name"
-                    : "last name"
-                  : null,
-                searchValue: isSearching ? req.query.search : null
-              }
+          res.render(path !== "/contacts/myfav" ? "contacts" : "myfav", {
+            path,
+            contacts,
+            currentPage,
+            pages: Math.ceil(count / contactsPerPage),
+            search: {
+              isSearching,
+              searchBy: isSearching
+                ? req.query.search === "firstName"
+                  ? "first name"
+                  : "last name"
+                : null,
+              searchValue: isSearching ? req.query.search : null
             }
-          );
+          });
         })
         .catch(err => {
           return next(util.createError500(err));
@@ -262,4 +271,105 @@ exports.addToFav = (req, res, next) => {
     .catch(err =>
       res.status(500).json({ message: "Failed to add to favorite" })
     );
+};
+
+exports.getLocation = (req, res, next) => {
+  let street = req.query.street;
+  let city = req.query.city;
+  let state = req.query.state;
+  let country = req.query.country;
+  let address = `${street}, ${city}, ${state}, ${country}`;
+
+  let encodedText = encodeURIComponent(address);
+  request(
+    {
+      url: `https://maps.googleapis.com/maps/api/geocode/json?key=${
+        process.env.MAP_API_KEY
+      }&address=${encodedText}`,
+      json: true
+    },
+    (err, response, body) => {
+      if (err) {
+        return res.json({ status: "ERROR" });
+      } else if (response.statusCode === 400) {
+        return res.json({ status: "ZERO_RESULTS" });
+      } else if (response.statusCode === 200) {
+        if (body.status === "OK") {
+          return res.json({
+            // latitude: body.results[0].geometry.location.lat,
+            // longitude: body.results[0].geometry.location.lng,
+            address: body.results[0].formatted_address,
+            status: "OK"
+          });
+        } else {
+          return res.json({ status: "ZERO_RESULTS" });
+        }
+      }
+    }
+  );
+};
+
+exports.shareContact = async (req, res, next) => {
+  let _id = mongoose.Types.ObjectId(req.body.id);
+  let toEmail = req.body.toEmail;
+  let contact;
+
+  try {
+    contact = await Contacts.findById({ _id });
+    user = await Users.findOne({ contacts: _id });
+
+    transporter.sendMail(
+      {
+        to: toEmail,
+        from: "contact-book@node.com",
+        subject: `${contact.firstName}'s Contact`,
+        html: `
+             <p>${contact.fullName}</p>
+             <table>
+                <tr>
+                  <th>Address</th>
+                </tr>
+                <tr>
+                  <td>Street: ${contact.address.street || "None"}</td>
+                </tr>
+                <tr>
+                  <td>City: ${contact.address.city || "None"}</td>
+                  <td>State: ${contact.address.state || "None"}</td>
+                </tr>
+                <tr>
+                  <td>Country: ${contact.address.country || "None"}</td>
+                  <td>ZIP: ${contact.address.zip || "None"}</td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                </tr>
+                <tr>
+                  <td>Email: ${contact.email || "None"}</td>
+                </tr>
+                <tr>
+                  <th>Phone Number</th>
+                </tr>
+                <tr>
+                  <td>Mobile: ${contact.phoneNumber.mobile || "None"}</td>
+                </tr>
+                <tr>
+                  <td>Work: ${contact.phoneNumber.home || "None"}</td>
+                </tr>
+                <tr>
+                  <td>Home: ${contact.phoneNumber.email || "None"}</td>
+                </tr>
+             </table>
+             <p>Share by ${user.email}</p>`
+      },
+      (err, info) => {
+        if (err) {
+          return res.json({ status: "Error" });
+        }
+
+        return res.json({ status: "OK" });
+      }
+    );
+  } catch (err) {
+    return res.json({ status: "Error" });
+  }
 };

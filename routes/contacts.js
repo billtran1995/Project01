@@ -14,6 +14,8 @@ router.get("/create", contactsController.getCreateContactPage);
 
 router.get("/myfav", contactsController.getContactsWithPagination);
 
+router.get("/getLocation", contactsController.getLocation);
+
 router.post(
   "/create",
   [
@@ -83,5 +85,7 @@ router.patch(
 router.delete("/:id", contactsController.deleteContact);
 
 router.post("/isFav", contactsController.addToFav);
+
+router.post("/share", contactsController.shareContact);
 
 module.exports = router;

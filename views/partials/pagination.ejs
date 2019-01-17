@@ -1,0 +1,31 @@
+<ul class="pagination">
+  <% if(currentPage == 1) { %>
+  <li class="disabled">
+    <a><i class="material-icons">chevron_left</i></a>
+  </li>
+  <% } else { %>
+  <li>
+    <a href="<%= path %>/?page=1"><i class="material-icons">chevron_left</i></a>
+  </li>
+  <% } %> <% var pageCheckpoint = (Number(currentPage) > 5 ? Number(currentPage)
+  - 4 : 1) %> <% if (pageCheckpoint !== 1) { %>
+  <li class="disabled"><a>...</a></li>
+  <% } %> <% for (i = pageCheckpoint; i <= (Number(currentPage) + 4) && i <=
+  pages; i++) { %> <% if (i === Number(currentPage)) { %>
+  <li class="active"><a><%= i %></a></li>
+  <% } else { %>
+  <li><a href="/contacts/?page=<%= i %>"><%= i %></a></li>
+  <% } %> <% if (i == Number(currentPage) + 4 && i < pages) { %>
+  <li class="disabled"><a>...</a></li>
+  <% } %> <% } %> <% if (currentPage == pages) { %>
+  <li class="disabled">
+    <a><i class="material-icons">chevron_right</i></a>
+  </li>
+  <% } else { %>
+  <li>
+    <a href="<%= path %>/?page=<%= pages %>"
+      ><i class="material-icons">chevron_right</i></a
+    >
+  </li>
+  <% } %>
+</ul>

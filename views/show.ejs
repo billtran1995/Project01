@@ -1,7 +1,14 @@
 <%- include("./partials/header") %> <%- include('partials/navbar') %>
 
 <div class="container">
-  <h1><%= contact.firstName + " " + contact.lastName %></h1>
+  <h1>
+    <%= contact.firstName + " " + contact.lastName %>
+    <span>
+      <a class="modal-trigger" href="#modal1">
+        <i class="small material-icons">share</i>
+      </a>
+    </span>
+  </h1>
   <div>
     <h5>Address:</h5>
     <div class="card">
@@ -14,12 +21,16 @@
           <tr>
             <th>City:</th>
             <td id="city"><%= contact.address.city %></td>
+          </tr>
+          <tr>
             <th>State:</th>
             <td id="state"><%= contact.address.state %></td>
           </tr>
           <tr>
             <th>Country:</th>
             <td id="country"><%= contact.address.country %></td>
+          </tr>
+          <tr>
             <th>ZIP:</th>
             <td id="zip"><%= contact.address.zip %></td>
           </tr>
@@ -60,16 +71,26 @@
       </div>
     </div>
     <div style="margin-bottom: 20px;">
-      <a class="waves-effect waves-light btn blue" href="/contacts"> Back </a>
+      <a
+        class="waves-effect waves-light btn blue"
+        href="/contacts"
+        style="margin-bottom: 5px; width: 150pt;"
+      >
+        Back
+      </a>
       <a
         class="waves-effect waves-light btn"
         href="/contacts/<%= contact._id %>/update"
+        style="margin-bottom: 5px; width: 150pt;"
       >
         Update Contact
       </a>
       <% if(contact.address.street && (contact.address.city ||
       contact.address.state || contact.address.country)) { %>
-      <button class="getLocation waves-effect waves-light btn yellow darken-1">
+      <button
+        class="getLocation waves-effect waves-light btn yellow darken-1"
+        style="margin-bottom: 5px; width: 150pt;"
+      >
         Get Location
       </button>
       <% } %>
@@ -78,7 +99,25 @@
   </div>
 </div>
 
+<div id="modal1" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <h3>Share contact to:</h3>
+    <div class="input-field" style="margin-top:20%;">
+      <input type="email" name="toEmail" />
+      <label for="toEmail">Share to</label>
+    </div>
+    <div class="modal-message"></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#" id="btnSendContact" class="waves-effect waves-light btn">
+      Send
+    </a>
+    <input type="hidden" name="contactID" value="<%= contact._id %>" />
+  </div>
+</div>
+
 <script>
+  let id = $("[name='contactID']").val();
   let street = $("#street").html();
   let city = $("#city").html();
   let state = $("#state").html();
@@ -87,7 +126,7 @@
   $(".getLocation").on("click", e => {
     $.ajax({
       dataType: "json",
-      url: "/getLocation",
+      url: "/contacts/getLocation",
       data: { street, city, state, country },
       success: function(data) {
         if (data.status === "OK") {
@@ -102,6 +141,27 @@
         }
       }
     });
+  });
+
+  $("#btnSendContact").on("click", function(e) {
+    let email = $("[name='toEmail']").val();
+    let emailRe = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (emailRe.test(email)) {
+      $.ajax({
+        dataType: "json",
+        method: "POST",
+        url: "/contacts/share",
+        data: { id, toEmail: email },
+        success: function(data) {
+          if (data.status === "OK") {
+            $(".modal-message").append("<p>Contact sent!</p>");
+          }
+        }
+      });
+      console.log("valid");
+    } else {
+      $(".modal-message").append("<p style='color: red;'>Invalid email.</p>");
+    }
   });
 </script>
 <%-include("./partials/footer")%>

@@ -39,4 +39,8 @@ const contactSchema = new Schema({
   }
 });
 
+contactSchema.virtual("fullName").get(function() {
+  return this.firstName + " " + this.lastName;
+});
+
 module.exports = mongoose.model("contact", contactSchema);
