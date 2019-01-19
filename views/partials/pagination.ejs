@@ -14,7 +14,14 @@
   pages; i++) { %> <% if (i === Number(currentPage)) { %>
   <li class="active"><a><%= i %></a></li>
   <% } else { %>
-  <li><a href="/contacts/?page=<%= i %>"><%= i %></a></li>
+  <li>
+    <% if(isSearching) { %>
+    <a href="<%= path %>?search=<%= search %>&searchBy=<%= searchBy %>&page=<%= i %>">
+    <% } else { %>
+    <a href="<%= path %>?page=<%= i %>">
+    <% } %>
+    <%= i %></a>
+  </li>
   <% } %> <% if (i == Number(currentPage) + 4 && i < pages) { %>
   <li class="disabled"><a>...</a></li>
   <% } %> <% } %> <% if (currentPage == pages) { %>
@@ -23,9 +30,13 @@
   </li>
   <% } else { %>
   <li>
-    <a href="<%= path %>/?page=<%= pages %>"
-      ><i class="material-icons">chevron_right</i></a
-    >
+    <% if(isSearching) { %>
+    <a href="<%= path %>?search=<%= search %>&searchBy=<%= searchBy %>&page=<%= pages %>">
+    <% } else { %>
+    <a href="<%= path %>?page=<%= pages %>">
+    <% } %>
+      <i class="material-icons">chevron_right</i>
+    </a>
   </li>
   <% } %>
 </ul>

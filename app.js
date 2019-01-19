@@ -2,19 +2,18 @@
 require("dotenv").load();
 const express = require("express");
 const mongoose = require("mongoose");
-const faker = require("faker");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const session = require("express-session");
 const MongodbStore = require("connect-mongodb-session")(session);
 const { isAuthenticated } = require("./middlewares/middleware");
 const flash = require("connect-flash");
+const csrf = require("csurf");
+const helmet = require("helmet");
 
 const errorController = require("./controllers/errorController");
 
-// Require model
-const Contacts = require("./Models/contacts"); // only for generate fake data
-const Users = require("./models/users");
+const csrfProtection = csrf();
 
 // Require routes
 const contactsRoutes = require("./routes/contacts");
@@ -33,6 +32,7 @@ const sessionStore = new MongodbStore({
 var app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
+app.use(helmet());
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -59,48 +59,19 @@ mongoose.connection
     return console.warn("Warning: ", error);
   });
 
-// For dev only * Remove when deploy
-// app.get("/generate-fake-data/:number/:email", (req, res) => {
-//   for (let i = 0; i < req.params.number; i++) {
-//     Contacts.create({
-//       firstName: faker.name.firstName(),
-//       lastName: faker.name.lastName(),
-//       email: faker.internet.email(),
-//       phoneNumber: {
-//         mobile: faker.phone.phoneNumber(),
-//         home: faker.phone.phoneNumber(),
-//         work: faker.phone.phoneNumber()
-//       },
-//       address: {
-//         street: faker.address.streetAddress(),
-//         city: faker.address.city(),
-//         state: faker.address.state(),
-//         country: faker.address.country(),
-//         zip: faker.address.zipCode()
-//       }
-//     }).then(contact => {
-//       Users.updateOne(
-//         { email: req.params.email },
-//         { $push: { contacts: contact._id } }
-//       )
-//         .then(result => console.log(result))
-//         .catch(err => console.log(err));
-//     });
-//   }
-//   res.redirect("/contacts");
-// });
-
 // Main
 app.get("/", (req, res) => {
   res.render("landing");
 });
 
 // app.use("/auth", authRoutes);
+app.use(csrfProtection);
 app.use("/contacts", isAuthenticated);
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
   next();
 });
 

@@ -8,6 +8,7 @@
         <input type="text" name="passcode" maxlength="8" required />
         <label for="passcode">Passcode</label>
       </div>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
       <button type="submit" class="btn">Activate Account</button> <%
       if(errorMessage) {%>
       <div class="error-message"><%= errorMessage %></div>

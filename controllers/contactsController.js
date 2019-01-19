@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const util = require("../util/util");
 const request = require("request");
+const PDFDocument = require("pdfkit");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
 const { validationResult } = require("express-validator/check");
@@ -70,8 +71,8 @@ exports.getContactsWithPagination = (req, res, next) => {
               isSearching,
               searchBy: isSearching
                 ? req.query.search === "firstName"
-                  ? "first name"
-                  : "last name"
+                  ? "firstName"
+                  : "lastName"
                 : null,
               searchValue: isSearching ? req.query.search : null
             }
@@ -371,5 +372,40 @@ exports.shareContact = async (req, res, next) => {
     );
   } catch (err) {
     return res.json({ status: "Error" });
+  }
+};
+
+exports.getContactPDF = async (req, res, next) => {
+  const _id = mongoose.Types.ObjectId(req.params.id);
+
+  try {
+    const contact = await Contacts.findById({ _id });
+    const PDFcontact = new PDFDocument();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", 'inline; filename="Contact.pdf"');
+    PDFcontact.pipe(res);
+
+    PDFcontact.fontSize(30).text(contact.fullName);
+    PDFcontact.fontSize(20).text("-------");
+    PDFcontact.text("ADDRESS");
+    PDFcontact.text("-------");
+    PDFcontact.text("Street: " + (contact.address.street || "none"));
+    PDFcontact.text("City: " + (contact.address.city || "none"));
+    PDFcontact.text("State: " + (contact.address.state || "none"));
+    PDFcontact.text("Country: " + contact.address.country || "none");
+    PDFcontact.text("Zip: " + contact.address.city || "none");
+    PDFcontact.text("-----");
+    PDFcontact.text("EMAIL");
+    PDFcontact.text("-----");
+    PDFcontact.text("Email: " + (contact.email || "none"));
+    PDFcontact.text("-----");
+    PDFcontact.text("Phone");
+    PDFcontact.text("-----");
+    PDFcontact.text("Mobile: " + (contact.phoneNumber.mobile || "none"));
+    PDFcontact.text("Home: " + (contact.phoneNumber.home || "none"));
+    PDFcontact.text("Work: " + (contact.phoneNumber.work || "none"));
+    PDFcontact.end();
+  } catch (err) {
+    return next(err);
   }
 };

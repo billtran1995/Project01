@@ -8,6 +8,7 @@
         <div class="row">
           <div class="col m1"></div>
           <div class="col m9">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <input type="search" name="search" placeholder="Search.." />
           </div>
           <div class="col m1">
@@ -108,7 +109,8 @@
   <!-- with other number, == should be use or we need to convert it to a number -->
   <!-- before comparing it with a number using === -->
   <% if (pages > 0) { %> <%- include('partials/pagination', {currentPage, pages,
-  path}) %> <% } %> <% } else {%>
+  path, isSearching: search.isSearching, search: search.searchValue, searchBy:
+  search.searchBy }) %> <% } %> <% } else {%>
   <div class="container">
     <p class="message">
       <% if(search.isSearching) { %> Contact with <%= search.searchBy %> of '<%=
@@ -177,7 +179,7 @@
           return result.json();
         })
         .then(data => {
-          star.innerHTML = "star-border";
+          star.innerHTML = "star_border";
         });
     }
   };

@@ -51,6 +51,8 @@ router.get("/:id", contactsController.getContactById);
 
 router.get("/:id/update", contactsController.getUpdateForm);
 
+router.get("/getPDF/:id", contactsController.getContactPDF);
+
 router.patch(
   "/:id/update",
   [
