@@ -392,8 +392,8 @@ exports.getContactPDF = async (req, res, next) => {
     PDFcontact.text("Street: " + (contact.address.street || "none"));
     PDFcontact.text("City: " + (contact.address.city || "none"));
     PDFcontact.text("State: " + (contact.address.state || "none"));
-    PDFcontact.text("Country: " + contact.address.country || "none");
-    PDFcontact.text("Zip: " + contact.address.city || "none");
+    PDFcontact.text("Country: " + (contact.address.country || "none"));
+    PDFcontact.text("Zip: " + (contact.address.zip || "none"));
     PDFcontact.text("-----");
     PDFcontact.text("EMAIL");
     PDFcontact.text("-----");
